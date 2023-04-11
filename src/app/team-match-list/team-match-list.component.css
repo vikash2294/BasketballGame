@@ -1,0 +1,18 @@
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 1px;
+    color: white;
+    display: inline-flex;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.status-win {
+    background-color: rgb(0, 163, 22);
+}
+
+.status-loss {
+    background-color: rgb(253, 37, 37);
+}

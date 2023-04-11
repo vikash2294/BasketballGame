@@ -1,0 +1,56 @@
+
+<div class="container text-bg-light">
+  <div class="row">
+    <h1>
+      {{title}}
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">
+      <select [(ngModel)]="selected">
+        <option value="0">-- Select --</option>
+        <option *ngFor="let stateObj of wholeData" value="{{stateObj.id}}">{{stateObj.city}}</option>
+      </select>
+      <!-- <p>{{ selected }}</p> -->
+    </div>
+    <div class="col-sm-2">
+      <button class="btn btn-primary" (click)="onChanged()">Track Team</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 p-1" *ngFor="let teamMatch of teamsMatchList; trackBy: trackByFn">
+      <div class="card border-secondary">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-10">
+              <h5>{{teamMatch.selectedTeam[0].full_name}} [{{teamMatch.selectedTeam[0].abbreviation}}]</h5>
+            </div>
+            <div class="col-sm-2"><button type="button" class="btn-close" aria-label="Close"
+                (click)="removeTeam(teamMatch.id)"></button></div>
+          </div>
+          <div>{{teamMatch.selectedTeam[0].conference}} conference</div>
+        </div>
+        <div class="card-body text-secondary">
+          <div class="row">
+            <div class="col-sm-8">
+              <div>Results of past 12 days:</div>
+              <div class="circle" *ngFor="let result of teamMatch.matchresult"
+                [ngClass]="result === 'W' ? 'status-win' : 'status-loss'">{{result}}</div>
+              <div><span>Avg Point Scored: </span>{{teamMatch.averageValue}}</div>
+              <div><span>Avg Point Conceded: </span><span>{{teamMatch.averageConcededValue}}</span></div>
+            </div>
+            <div class="col-sm-4">
+              <img src="https://interstate21.com/nba-logos/{{teamMatch.selectedTeam[0].abbreviation}}.png"
+                class="card-img-top" alt="...">
+            </div>
+          </div>
+          <div>
+            <button id="button1" type="button" class="btn btn-success"
+              [routerLink]="['/results', teamMatch.selectedTeam[0].id]" aria-label="Close"
+              (click)="viewGameResults(teamMatch.home_team.id)">See Game Results >></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
