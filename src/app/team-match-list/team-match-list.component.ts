@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.services';
 import { ScoreTrackingService } from '../services/score.tracking.service';
 import { NBADataArray, NBAGameData, NBAteam } from '../interface';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'team-match-list',
@@ -10,7 +11,9 @@ import { NBADataArray, NBAGameData, NBAteam } from '../interface';
 })
 export class TeamMatchListComponent implements OnInit {
 
-  constructor(private apiservice: ApiService, private scoreTrackingService: ScoreTrackingService) {}
+  constructor(private apiservice: ApiService, 
+    private loader: LoadingService,
+    private scoreTrackingService: ScoreTrackingService) {}
  
   title = 'NBA Score Tracking App';
   selected: number = 0;
@@ -20,6 +23,14 @@ export class TeamMatchListComponent implements OnInit {
   averagevalue: number=0;
 
   ngOnInit(): void {
+    let teamDetailsItem = localStorage.getItem('teamDetails');
+    if (teamDetailsItem) {
+      this.loader.requestStarted();
+      this.teamsMatchList = JSON.parse(teamDetailsItem);
+      setTimeout(() => {
+        this.loader.requestEnded();
+      }, 400);
+    }
     this.apiservice.getTeam().subscribe(data => {
       if(data) {
         this.teamData = data.data.map((c: { name: string; }) => c.name);
@@ -71,6 +82,10 @@ export class TeamMatchListComponent implements OnInit {
           if(isTrackexists === -1)
             this.teamsMatchList.push(resData);
         }
+        localStorage.setItem(
+          'teamDetails',
+          JSON.stringify(this.teamsMatchList)
+        );
       });
     }
   }
@@ -80,6 +95,10 @@ export class TeamMatchListComponent implements OnInit {
   removeTeam(teamTrackId: number){
 
     this.teamsMatchList = this.teamsMatchList.filter( track => track.id != teamTrackId);
+    localStorage.setItem(
+      'teamDetails',
+      JSON.stringify(this.teamsMatchList)
+    );
   }
 
   viewGameResults(teamTrackId: number){
